@@ -6,7 +6,7 @@ var parser = new xml2js.Parser()
 let JMdict = slash("src/static/JMdict_e.xml")
 
 //create array for dictionary to be pushed into
-export const dict = []
+const dict = []
 
 //convert xml file to JSON file and push it into dict array
 fs.readFile(JMdict, "utf8", function (err, data) {
@@ -19,8 +19,8 @@ fs.readFile(JMdict, "utf8", function (err, data) {
         if (err) {
           console.log("Err: " + err)
         } else {
-          dict.push(res)
-          console.log(dict)
+          data = JSON.stringify(res, null, 2)
+          fs.writeFileSync("JMdict.json", data)
         }
       }
     )

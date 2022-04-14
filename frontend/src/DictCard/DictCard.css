@@ -1,0 +1,44 @@
+.dictCard-title {
+  font-size: 20px !important;
+  text-align: center;
+}
+.dictCard-container {
+  width: 95%;
+
+  padding-bottom: 0.75rem;
+}
+
+.dictCard-romaji {
+  font-size: 14px !important;
+}
+
+.dictCard-pos {
+  font-size: 12px !important;
+  opacity: 0.6;
+  padding-left: 0.5rem;
+}
+
+.dictCard-kanji {
+  font-size: 26px !important;
+  font-weight: bold !important;
+  padding-left: 1rem;
+  padding-bottom: 0.5rem;
+}
+
+.dictCard-index,
+.dictCard-gloss {
+  display: flex;
+  font-size: 16px !important;
+}
+
+.dictCard-index {
+  padding-left: 0.6rem;
+  padding-right: 0.2rem;
+  opacity: 0.6;
+}
+
+.dictCard-gloss {
+  padding-bottom: 0.5rem;
+  padding-left: 1rem;
+  padding-right: 0.5rem;
+}

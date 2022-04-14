@@ -1,3 +1,17 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:56e4088eb2c8abe82eb6a86e0ebb8d58a4577b525230d116e8df14e0660f399e
-size 366
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "Backend for Jisho app",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon app.js"
+  },
+  "author": "Aaron Tran",
+  "license": "ISC",
+  "devDependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.3",
+    "nodemon": "^2.0.15"
+  }
+}

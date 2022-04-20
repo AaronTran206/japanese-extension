@@ -1,3 +1,6 @@
+import Kuroshiro from "kuroshiro"
+import KuromojiAnalyzer from "kuroshiro-analyzer-kuromoji"
+
 //keb is the kanji element
 //ke_inf coded information field
 //ke_pri indicates how often it appears in different sources
@@ -54,6 +57,7 @@ export interface JMdictEntries {
   entry: dictEntries[]
 }
 
+//Server call to extract dictionary data
 export async function fetchJMdictData(word: string): Promise<dictEntries[]> {
   const res = await fetch("http://localhost:8000")
 
@@ -73,4 +77,31 @@ export async function fetchJMdictData(word: string): Promise<dictEntries[]> {
   )
 
   return filterData
+}
+
+//kuroshiro API to convert kanji into elements with furigana characters above the kanji element
+export async function furiganaGenerator(
+  arr: dictEntries[]
+): Promise<Array<any>> {
+  const kuroshiro = new Kuroshiro()
+
+  await kuroshiro.init(
+    new KuromojiAnalyzer({
+      dictPath: "./dict/",
+    })
+  )
+
+  const newArr = []
+  arr.forEach((entries) => {
+    const result = kuroshiro.convert(
+      entries.k_ele[0]?.keb[0] || entries.r_ele[0].reb[0],
+      {
+        mode: "furigana",
+        to: "hiragana",
+      }
+    )
+
+    newArr.push(result)
+  })
+  return Promise.all(newArr)
 }

@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from "react"
 import { Box, Card, Paper, CardContent, Typography, Grid } from "@mui/material"
-import { dictEntries, fetchJMdictData, senseEntries } from "../utils/api"
+import {
+  dictEntries,
+  senseEntries,
+  fetchJMdictData,
+  furiganaGenerator,
+} from "../utils/api"
 import "./DictCard.css"
 
 //create Card to use in popup window
@@ -8,18 +13,23 @@ const DictCard: React.FC<{
   word: string
 }> = ({ word }) => {
   const [dictData, setDictData] = useState<dictEntries[] | null>(null)
+  const [furigana, setFurigana] = useState<any>(null)
 
   //everytime the component mounts, and updates, make sure that the DictData is set to the JM dictionary data
   useEffect(() => {
     fetchJMdictData(word)
       .then((filterData) => {
         setDictData(filterData)
+        furiganaGenerator(filterData).then((furiganaArr) =>
+          setFurigana(furiganaArr)
+        )
       })
       .catch((err) => {
         console.log(err)
       })
   }, [word])
 
+  //replace all adjectives with human-readable descriptions that are to be displayed in the popup window
   const filterPos = (arr: senseEntries) => {
     const filterArr = arr.pos.map((word) =>
       word
@@ -124,6 +134,9 @@ const DictCard: React.FC<{
     return filterArr
   }
 
+  //if the furigana array is empty, then return. The purpose is so the app renders all at once and not at separate times
+  if (!furigana) return null
+
   return (
     <Box>
       <Grid
@@ -141,22 +154,22 @@ const DictCard: React.FC<{
           </Paper>
         </Grid>
       </Grid>
-      {dictData?.map((entries) => (
+      {dictData?.map((entries, index) => (
         <Box
           mx={"2px"}
           className="dictCard-container"
           paddingBottom={"0.75rem"}
           width={"100%"}
+          key={entries.ent_seq[0]}
         >
           <Grid container flexDirection="column" alignItems="stretch">
             <Paper elevation={4}>
               <Card>
                 <Grid item>
-                  <Typography className="dictCard-romaji">
-                    {entries.r_ele[0]?.reb[0]}
-                  </Typography>
-                  <Typography className="dictCard-kanji">
-                    {entries.k_ele[0]?.keb[0]}
+                  <Typography className="dictCard-word">
+                    <div
+                      dangerouslySetInnerHTML={{ __html: furigana[index] }}
+                    />
                   </Typography>
                   {entries.sense.map((def, i) => (
                     <Box paddingBottom={"0.5rem"} key={i}>

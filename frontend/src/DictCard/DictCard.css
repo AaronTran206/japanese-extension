@@ -18,11 +18,11 @@
   padding-left: 0.5rem;
 }
 
-.dictCard-kanji {
+.dictCard-word {
   font-size: 26px !important;
   font-weight: bold !important;
   padding-left: 1rem;
-  padding-bottom: 0.5rem;
+  padding-top: 0.5rem;
 }
 
 .dictCard-index,

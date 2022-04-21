@@ -54,7 +54,10 @@ export interface JMdictEntries {
   entry: dictEntries[]
 }
 
+//dictionary data
 const data = require("./JMdict.json")
+
+//function to return array of objects that contain the word from the request parameter
 export async function fetchJMdictData(word: string): Promise<dictEntries[]> {
   const filterData: dictEntries[] = await data.JMdict.entry.filter(
     (entries: dictEntries) => {

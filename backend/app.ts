@@ -11,6 +11,7 @@ app.use(cors())
 //server get request
 app.get("/search/:word", async (req: Request, res: Response) => {
   try {
+    //store array of objects containing request parameter in array to be sent back to the frontend
     const filteredArr = await fetchJMdictData(req.params.word)
     res.json(filteredArr)
   } catch (err) {

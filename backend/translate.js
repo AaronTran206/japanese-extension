@@ -11,7 +11,7 @@ const dict = []
 //convert xml file to JSON file and push it into dict array
 fs.readFile(JMdict, "utf8", function (err, data) {
   if (err) {
-    console.log("Err111: " + err)
+    console.log("Conversion Error: " + err)
   } else {
     parser.parseString(
       data.replace(/&(?!(?:apos|quot|[gl]t|amp);|#)/g, "&amp;"),

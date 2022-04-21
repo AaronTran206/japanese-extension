@@ -57,26 +57,15 @@ export interface JMdictEntries {
   entry: dictEntries[]
 }
 
-//Server call to extract dictionary data
+//fetch to backend to return dictionary data
 export async function fetchJMdictData(word: string): Promise<dictEntries[]> {
-  const res = await fetch("http://localhost:8000")
+  const res = await fetch(`http://localhost:8000/search/${word}`)
 
   if (!res.ok) throw new Error(`Error: ${res}`)
 
   const data = await res.json()
 
-  const filterData: dictEntries[] = await data.entry.filter(
-    (entries: dictEntries) => {
-      if (
-        entries?.r_ele !== undefined &&
-        entries?.r_ele[0].reb.includes(word)
-      ) {
-        return entries
-      }
-    }
-  )
-
-  return filterData
+  return data
 }
 
 //kuroshiro API to convert kanji into elements with furigana characters above the kanji element

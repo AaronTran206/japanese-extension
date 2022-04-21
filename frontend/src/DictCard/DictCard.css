@@ -4,8 +4,6 @@
 }
 .dictCard-container {
   width: 95%;
-
-  padding-bottom: 0.75rem;
 }
 
 .dictCard-romaji {
@@ -38,7 +36,6 @@
 }
 
 .dictCard-gloss {
-  padding-bottom: 0.5rem;
   padding-left: 1rem;
   padding-right: 0.5rem;
 }

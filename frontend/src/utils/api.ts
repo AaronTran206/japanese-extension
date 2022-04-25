@@ -79,18 +79,28 @@ export async function furiganaGenerator(
       dictPath: "./dict/",
     })
   )
-
+  const furiganaObj = {
+    mode: "furigana",
+    to: "hiragana",
+  }
+  console.log(arr)
   const newArr = []
   arr.forEach((entries) => {
-    const result = kuroshiro.convert(
-      entries.k_ele[0]?.keb[0] || entries.r_ele[0].reb[0],
-      {
-        mode: "furigana",
-        to: "hiragana",
-      }
-    )
-
-    newArr.push(result)
+    if (!entries.k_ele) {
+      const romajiResult = kuroshiro.convert(
+        entries.r_ele[0]?.reb[0],
+        furiganaObj
+      )
+      newArr.push(romajiResult)
+    } else {
+      const kanjiResult = kuroshiro.convert(
+        entries.k_ele[0]?.keb[0],
+        furiganaObj
+      )
+      newArr.push(kanjiResult)
+      console.log("kanji element")
+    }
   })
+  console.log(newArr)
   return Promise.all(newArr)
 }

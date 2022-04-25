@@ -3,7 +3,6 @@ import ReactDOM from "react-dom"
 import "./popup.css"
 import DictCard from "../DictCard/DictCard"
 import { Box, Grid, Paper } from "@mui/material"
-import { dictEntries } from "../utils/api"
 
 const App: React.FC<{}> = () => {
   // async function fetchJMdictData(word: string): Promise<dictEntries[]> {
@@ -18,9 +17,15 @@ const App: React.FC<{}> = () => {
   // }
   // fetchJMdictData("難しい")
 
+  const word = "eat"
+  // const word = "デニる"
+  // const word = "食べる"
+  // const word = "食べた"
+  // const word = '早いね起きるの って言おうとしたらもう昼だったww'
+
   return (
     <Box>
-      <DictCard word="かける"></DictCard>
+      <DictCard word={word}></DictCard>
     </Box>
   )
 }

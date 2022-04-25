@@ -56,20 +56,36 @@ export interface JMdictEntries {
 
 //dictionary data
 const data = require("./JMdict.json")
+// import data from "./JMdict.json"
 
 //function to return array of objects that contain the word from the request parameter
 export async function fetchJMdictData(word: string): Promise<dictEntries[]> {
   const filterData: dictEntries[] = await data.JMdict.entry.filter(
     (entries: dictEntries) => {
+      //return entry if searched word matches romaji
       if (
         entries?.r_ele !== undefined &&
-        entries?.r_ele[0]?.reb?.includes(word)
+        entries?.r_ele[0]?.reb?.includes(word.trim())
       ) {
         return entries
       }
+
+      //return entry if searched word matches kanji
       if (
         entries?.k_ele !== undefined &&
-        entries?.k_ele[0]?.keb?.includes(word)
+        entries?.k_ele[0]?.keb?.includes(word.trim())
+      ) {
+        return entries
+      }
+
+      //return entry if searched word matches part of english definition
+      if (
+        entries?.sense !== undefined &&
+        entries?.sense?.some((senseEntry) =>
+          senseEntry?.gloss?.some((def) =>
+            def.toString().split(" ").includes(word.trim().toLowerCase())
+          )
+        )
       ) {
         return entries
       }

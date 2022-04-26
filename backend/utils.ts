@@ -56,7 +56,7 @@ export interface JMdictEntries {
 
 //dictionary data
 const data = require("./JMdict.json")
-// import data from "./JMdict.json"
+// import * as data from "./JMdict.json"
 
 //function to return array of objects that contain the word from the request parameter
 export async function fetchJMdictData(word: string): Promise<dictEntries[]> {
@@ -79,6 +79,20 @@ export async function fetchJMdictData(word: string): Promise<dictEntries[]> {
       }
 
       //return entry if searched word matches part of english definition
+      //search function if the word has a space in it
+      if (
+        word.trim().indexOf(" ") >= 0 &&
+        entries?.sense !== undefined &&
+        entries?.sense?.some((senseEntry) =>
+          senseEntry?.gloss?.some(
+            (def) => def.toString().indexOf(word.trim().toLowerCase()) >= 0
+          )
+        )
+      ) {
+        return entries
+      }
+
+      //search function if the word has no space in it
       if (
         entries?.sense !== undefined &&
         entries?.sense?.some((senseEntry) =>

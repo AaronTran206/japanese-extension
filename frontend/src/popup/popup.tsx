@@ -17,7 +17,8 @@ const App: React.FC<{}> = () => {
   // }
   // fetchJMdictData("難しい")
 
-  const word = "eat"
+  // const word = "eat"
+  const word = "to eat"
   // const word = "デニる"
   // const word = "食べる"
   // const word = "食べた"

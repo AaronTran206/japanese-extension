@@ -166,11 +166,10 @@ const DictCard: React.FC<{
             <Paper elevation={4}>
               <Card>
                 <Grid item>
-                  <Typography className="dictCard-word">
-                    <div
-                      dangerouslySetInnerHTML={{ __html: furigana[index] }}
-                    />
-                  </Typography>
+                  <Typography
+                    className="dictCard-word"
+                    dangerouslySetInnerHTML={{ __html: furigana[index] }}
+                  ></Typography>
                   {entries.sense.map((def, i) => (
                     <Box paddingBottom={"0.5rem"} key={i}>
                       <Grid container>

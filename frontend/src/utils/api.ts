@@ -98,7 +98,6 @@ export async function furiganaGenerator(
         furiganaObj
       )
       newArr.push(kanjiResult)
-      console.log("kanji element")
     }
   })
   console.log(newArr)

@@ -1,5 +1,7 @@
 import Kuroshiro from "kuroshiro"
 import KuromojiAnalyzer from "kuroshiro-analyzer-kuromoji"
+import * as kuromoji from "kuromoji"
+import { arrayBuffer } from "stream/consumers"
 
 //keb is the kanji element
 //ke_inf coded information field
@@ -57,6 +59,22 @@ export interface JMdictEntries {
   entry: dictEntries[]
 }
 
+export interface kuromojiObject {
+  basic_form: string
+  conjugated_form: string
+  conjugated_type: string
+  pos: string
+  pos_detail_1: string
+  pos_detail_2: string
+  pos_detail_3: string
+  pronunciation: string
+  reading: string
+  surface_form: string
+  word_id: number
+  word_position: number
+  word_type: string
+}
+
 //fetch to backend to return dictionary data
 export async function fetchJMdictData(word: string): Promise<dictEntries[]> {
   const res = await fetch(`http://localhost:8000/search/${word}`)
@@ -83,7 +101,9 @@ export async function furiganaGenerator(
     mode: "furigana",
     to: "hiragana",
   }
-  console.log(arr)
+
+  // console.log(arr)
+
   const newArr = []
   arr.forEach((entries) => {
     if (!entries.k_ele) {
@@ -100,6 +120,5 @@ export async function furiganaGenerator(
       newArr.push(kanjiResult)
     }
   })
-  console.log(newArr)
   return Promise.all(newArr)
 }

@@ -5,3 +5,44 @@ body {
   font-family: "Roboto";
   background-color: #f5f5f5;
 }
+
+.popup-title {
+  font-size: 20px !important;
+  width: fit-content;
+  text-decoration: underline;
+  text-decoration-thickness: 0.1rem;
+  color: #808080;
+  cursor: pointer;
+  display: inline-flex;
+  justify-content: center;
+  position: relative;
+}
+
+.popup-title span {
+  height: fit-content;
+  width: fit-content;
+  display: inline-flex;
+  background: #404040;
+  padding: 0.05rem 0.2rem;
+  border-radius: 5px;
+  position: relative;
+  top: -15px;
+}
+
+.popup-title .pos {
+  color: white;
+  font-size: 12px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+  transition: 0.2s ease-out;
+}
+
+.popup-title:hover .pos {
+  opacity: 1;
+  pointer-events: auto;
+  transition: 0.2s ease-in;
+}

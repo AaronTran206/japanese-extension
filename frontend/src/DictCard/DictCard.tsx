@@ -134,7 +134,7 @@ const DictCard: React.FC<{
     return filterArr
   }
 
-  //if the furigana array is empty, then return. The purpose is so the app renders all at once and not at separate times
+  //if the furigana array is empty, then return. The app renders all at once and not at separate times
   if (!furigana) return null
 
   return (
@@ -147,13 +147,7 @@ const DictCard: React.FC<{
         justifyContent="center"
         alignContent="center"
         width={"100%"}
-      >
-        <Grid item xs={10}>
-          <Paper variant="outlined">
-            <Typography className="dictCard-title">{word}</Typography>
-          </Paper>
-        </Grid>
-      </Grid>
+      ></Grid>
       {dictData?.map((entries, index) => (
         <Box
           mx={"2px"}

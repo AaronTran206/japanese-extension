@@ -135,6 +135,7 @@ const DictCard: React.FC<{
   }
 
   //if the furigana array is empty, then return. The app renders all at once and not at separate times
+  if (word === undefined) return null
   if (!furigana) return null
 
   return (

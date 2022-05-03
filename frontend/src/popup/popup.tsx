@@ -70,8 +70,17 @@ const App: React.FC<{}> = ({}) => {
 
   return (
     <Box>
-      <Grid container marginBottom={"10px"} display={"inline-block"}>
-        <Grid item>
+      <Grid
+        container
+        marginBottom={"10px"}
+        display={"flex"}
+        alignContent={"center"}
+        justifyContent={"center"}
+        position={"sticky"}
+        zIndex={1}
+        top={"4px"}
+      >
+        <Grid item width={"100%"}>
           <Paper variant="outlined">
             <Box py={"2px"} px={"10px"}>
               <InputBase
@@ -88,7 +97,6 @@ const App: React.FC<{}> = ({}) => {
           </Paper>
         </Grid>
       </Grid>
-
       <Paper elevation={2}>
         <Grid
           container
@@ -129,7 +137,6 @@ const App: React.FC<{}> = ({}) => {
           }
         </Grid>
       </Paper>
-
       <DictCard word={dictWord}></DictCard>
     </Box>
   )

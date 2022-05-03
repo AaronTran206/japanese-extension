@@ -160,6 +160,9 @@ const DictCard: React.FC<{
         >
           <img src="oshushi.png" />
           <Typography className="oshushi-text">言葉を探してみて！</Typography>
+          <Typography className="oshushi-text-mini">
+            (try copying and pasting the above sentence)
+          </Typography>
         </Grid>
       </Box>
     )
@@ -220,7 +223,6 @@ const DictCard: React.FC<{
         ></Grid>
         {dictData?.map((entries, index) => (
           <Box
-            mx={"2px"}
             className="dictCard-container"
             paddingBottom={"0.75rem"}
             width={"100%"}

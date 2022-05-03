@@ -104,7 +104,7 @@ const App: React.FC<{}> = ({}) => {
               <Grid item key={i} width={"fit-content"}>
                 <Typography
                   className={
-                    activeID === i
+                    activeID === i && dictWord.indexOf(" ") < 0
                       ? "popup-title active"
                       : "popup-title inactive"
                   }

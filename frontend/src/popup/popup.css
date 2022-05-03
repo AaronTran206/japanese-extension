@@ -26,6 +26,10 @@ body {
   font-weight: 600 !important;
 }
 
+.particle {
+  color: #db1d00;
+}
+
 .popup-title span {
   height: fit-content;
   width: fit-content;

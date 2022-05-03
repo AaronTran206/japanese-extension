@@ -25,6 +25,7 @@ const App: React.FC<{}> = ({}) => {
         var path: kuromojiObject[] = tokenizer.tokenize(sentence)
         setKuromojiArr(path)
         setActiveID(0)
+        console.log(path)
 
         //If the search is japanese, set the dictWord to the basic form of the word so that the dictionary can properly query. Otherwise query the searched result in English
         if (Kuroshiro.Util.hasJapanese(search)) {
@@ -38,6 +39,7 @@ const App: React.FC<{}> = ({}) => {
 
   //Change and return the japanese parts-of-speech to English
   const posToEnglish = (pos: string) => {
+    if (pos === "感動詞") return pos.replace("感動詞", "Interjection")
     const engPos = pos
       .replace("形容詞", "Adjective")
       .replace("助動詞", "Particle")
@@ -48,6 +50,7 @@ const App: React.FC<{}> = ({}) => {
       .replace("名詞", "Noun")
       .replace("連体詞", "Prenoun")
       .replace("接頭詞", "Prefix")
+
     return engPos
   }
 
@@ -66,6 +69,16 @@ const App: React.FC<{}> = ({}) => {
   //set activeID to the index of the target clicked
   const handleActive = (index: number) => {
     setActiveID(Number(index))
+  }
+
+  const activeWord = (entry: kuromojiObject, index: number) => {
+    console.log(entry)
+    if (entry.pos === "助詞") return "popup-title particle"
+    if (activeID === index && dictWord.indexOf(" ") < 0) {
+      return "popup-title active"
+    } else {
+      return "popup-title inactive"
+    }
   }
 
   return (
@@ -111,11 +124,7 @@ const App: React.FC<{}> = ({}) => {
             kuromojiArr?.map((entries, i) => (
               <Grid item key={i} width={"fit-content"}>
                 <Typography
-                  className={
-                    activeID === i && dictWord.indexOf(" ") < 0
-                      ? "popup-title active"
-                      : "popup-title inactive"
-                  }
+                  className={activeWord(entries, i)}
                   data-basic={entries.basic_form}
                   data-index={i}
                   onClick={(e: any) => {

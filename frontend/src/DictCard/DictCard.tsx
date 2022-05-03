@@ -19,19 +19,19 @@ const DictCard: React.FC<{
 
   //everytime the component mounts, and updates, make sure that the DictData is set to the JM dictionary data
 
-  console.log(cardState)
-  console.log(word)
-
   useEffect(() => {
+    //if the word is empty, undefined, or equal to a asterisk, then return. This is to prevent the card from loading definitions for "undefined" on first render. Must be put inside the UseEffect function to follow React rules of flow.
     if (word === "" || word === undefined || word === "*") return null
     setCardState("loading")
     fetchJMdictData(word)
       .then((filterData) => {
         setDictData(filterData)
         furiganaGenerator(filterData).then((furiganaArr) => {
+          //If the furiganaArr has a length of 0, then that means that the search came up empty and the search query was invalid. Set cardState to error to display error messaget to user
           if (furiganaArr.length === 0) {
             setCardState("error")
           } else {
+            // if the furiganaArr is populated, the search query was successful and the search is ready to be displayed to the user
             setCardState("ready")
             setFurigana(furiganaArr)
           }
@@ -196,7 +196,7 @@ const DictCard: React.FC<{
         >
           <img src="oshushiNervous.png" />
           <Typography className="oshushi-text">
-            言葉をみつかれなかった。。。
+            ごめんね！探している言葉は見つからないよ。。。
           </Typography>
         </Grid>
       </Box>

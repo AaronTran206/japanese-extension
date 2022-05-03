@@ -1,12 +1,4 @@
-import React, {
-  useState,
-  useEffect,
-  ButtonHTMLAttributes,
-  FormEventHandler,
-  KeyboardEvent,
-  KeyboardEventHandler,
-  Key,
-} from "react"
+import React, { useState, useEffect } from "react"
 import ReactDOM from "react-dom"
 import "./popup.css"
 import DictCard from "../DictCard/DictCard"
@@ -17,6 +9,7 @@ import Kuroshiro from "kuroshiro"
 
 const App: React.FC<{}> = ({}) => {
   const [kuromojiArr, setKuromojiArr] = useState<kuromojiObject[] | null>(null)
+  const [activeID, setActiveID] = useState<number>(null)
   const [search, setSearch] = useState<string>("")
   const [dictWord, setDictWord] = useState<string>("")
 
@@ -31,10 +24,14 @@ const App: React.FC<{}> = ({}) => {
       .build(function (err: any, tokenizer: any) {
         var path: kuromojiObject[] = tokenizer.tokenize(sentence)
         setKuromojiArr(path)
+
+        //If the search is japanese, set the dictWord to the basic form of the word so that the dictionary can properly query. Otherwise query the searched result in English
         if (Kuroshiro.Util.hasJapanese(search)) {
           setDictWord(path[0]?.basic_form)
         } else {
-          setDictWord(path[0]?.surface_form)
+          const engPhrase = path.map((obj) => obj.surface_form)
+          setDictWord(engPhrase.join(""))
+          setActiveID(0)
         }
       })
   }
@@ -49,12 +46,14 @@ const App: React.FC<{}> = ({}) => {
       .replace("記号", "")
       .replace("副詞", "Adverb")
       .replace("名詞", "Noun")
-    console.log(engPos)
+      .replace("連体詞", "Prenoun")
+      .replace("接頭詞", "Prefix")
     return engPos
   }
 
   //search function
   const handleSubmit = (query: string) => {
+    //does not query if the searchBar is empty
     if (query !== "") {
       const inputField = document.querySelector("input")
       setSearch(query)
@@ -64,7 +63,10 @@ const App: React.FC<{}> = ({}) => {
     }
   }
 
-  // if (!kuromojiArr) return null
+  //set activeID to the index of the target clicked
+  const handleActive = (index: number) => {
+    setActiveID(Number(index))
+  }
 
   return (
     <Box>
@@ -77,6 +79,7 @@ const App: React.FC<{}> = ({}) => {
                 fullWidth={true}
                 placeholder="Search Japanese, English, or Romaji"
                 onKeyPress={(e: any) => {
+                  //when Enter is pressed and the value is not an empty string, query the input value
                   if (e.key === "Enter" && e.target.value !== "")
                     handleSubmit(e.target.value)
                 }}
@@ -89,31 +92,41 @@ const App: React.FC<{}> = ({}) => {
       <Paper elevation={2}>
         <Grid
           container
+          className="searchBar"
           direction={"row"}
           justifyContent={"center"}
           alignItems={"center"}
           gap={0.7}
         >
-          {kuromojiArr?.map((entries, i) => (
-            <Grid item key={i} width={"fit-content"}>
-              <Typography
-                className="popup-title"
-                onClick={(e: any) => {
-                  if (
-                    e.target.children[0].innerHTML === "Particle" ||
-                    e.target.getAttribute("data-basic") === dictWord
-                  )
-                    return
-
-                  setDictWord(e.target.getAttribute("data-basic"))
-                }}
-                data-basic={entries.basic_form}
-              >
-                {entries.surface_form}
-                <span className="pos">{posToEnglish(entries?.pos)}</span>
-              </Typography>
-            </Grid>
-          ))}
+          {
+            //map through the array returned from the array returned from the kuromoji API and display the surface-forms (the form in which the sentence was input) in an underlined style and spaced slightly apart for easier readability
+            kuromojiArr?.map((entries, i) => (
+              <Grid item key={i} width={"fit-content"}>
+                <Typography
+                  className={
+                    activeID === i
+                      ? "popup-title active"
+                      : "popup-title inactive"
+                  }
+                  data-basic={entries.basic_form}
+                  data-index={i}
+                  onClick={(e: any) => {
+                    //Clicking does not work on particles or if the clicked word is the word that is searched right now
+                    if (
+                      e.target.children[0].innerHTML === "Particle" ||
+                      e.target.getAttribute("data-basic") === dictWord
+                    )
+                      return
+                    handleActive(Number(e.target.getAttribute("data-index")))
+                    setDictWord(e.target.getAttribute("data-basic"))
+                  }}
+                >
+                  {entries.surface_form}
+                  <span className="pos">{posToEnglish(entries?.pos)}</span>
+                </Typography>
+              </Grid>
+            ))
+          }
         </Grid>
       </Paper>
 

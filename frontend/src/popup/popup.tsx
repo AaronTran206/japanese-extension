@@ -73,7 +73,8 @@ const App: React.FC<{}> = ({}) => {
 
   const activeWord = (entry: kuromojiObject, index: number) => {
     console.log(entry)
-    if (entry.pos === "助詞") return "popup-title particle"
+    if (entry.pos === "助詞" || entry.pos === "記号")
+      return "popup-title particle"
     if (activeID === index && dictWord.indexOf(" ") < 0) {
       return "popup-title active"
     } else {
@@ -131,6 +132,7 @@ const App: React.FC<{}> = ({}) => {
                     //Clicking does not work on particles or if the clicked word is the word that is searched right now
                     if (
                       e.target.children[0].innerHTML === "Particle" ||
+                      e.target.children[0].innerHTML === "" ||
                       e.target.getAttribute("data-basic") === dictWord
                     )
                       return

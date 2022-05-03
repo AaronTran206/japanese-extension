@@ -24,6 +24,7 @@ const App: React.FC<{}> = ({}) => {
       .build(function (err: any, tokenizer: any) {
         var path: kuromojiObject[] = tokenizer.tokenize(sentence)
         setKuromojiArr(path)
+        setActiveID(0)
 
         //If the search is japanese, set the dictWord to the basic form of the word so that the dictionary can properly query. Otherwise query the searched result in English
         if (Kuroshiro.Util.hasJapanese(search)) {
@@ -31,7 +32,6 @@ const App: React.FC<{}> = ({}) => {
         } else {
           const engPhrase = path.map((obj) => obj.surface_form)
           setDictWord(engPhrase.join(""))
-          setActiveID(0)
         }
       })
   }
@@ -92,7 +92,6 @@ const App: React.FC<{}> = ({}) => {
       <Paper elevation={2}>
         <Grid
           container
-          className="searchBar"
           direction={"row"}
           justifyContent={"center"}
           alignItems={"center"}
@@ -100,6 +99,7 @@ const App: React.FC<{}> = ({}) => {
         >
           {
             //map through the array returned from the array returned from the kuromoji API and display the surface-forms (the form in which the sentence was input) in an underlined style and spaced slightly apart for easier readability
+
             kuromojiArr?.map((entries, i) => (
               <Grid item key={i} width={"fit-content"}>
                 <Typography

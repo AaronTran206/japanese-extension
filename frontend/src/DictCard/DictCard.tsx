@@ -8,24 +8,37 @@ import {
 } from "../utils/api"
 import "./DictCard.css"
 
+type dictCardState = "loading" | "error" | "ready" | "start"
 //create Card to use in popup window
 const DictCard: React.FC<{
   word: string
 }> = ({ word }) => {
   const [dictData, setDictData] = useState<dictEntries[] | null>(null)
   const [furigana, setFurigana] = useState<any>(null)
+  const [cardState, setCardState] = useState<dictCardState>("start")
 
   //everytime the component mounts, and updates, make sure that the DictData is set to the JM dictionary data
+
+  console.log(cardState)
+  console.log(word)
+
   useEffect(() => {
+    if (word === "" || word === undefined || word === "*") return null
+    setCardState("loading")
     fetchJMdictData(word)
       .then((filterData) => {
         setDictData(filterData)
-        furiganaGenerator(filterData).then((furiganaArr) =>
-          setFurigana(furiganaArr)
-        )
+        furiganaGenerator(filterData).then((furiganaArr) => {
+          if (furiganaArr.length === 0) {
+            setCardState("error")
+          } else {
+            setCardState("ready")
+            setFurigana(furiganaArr)
+          }
+        })
       })
       .catch((err) => {
-        console.log(err)
+        console.error(err)
       })
   }, [word])
 
@@ -134,68 +147,125 @@ const DictCard: React.FC<{
     return filterArr
   }
 
-  //if the furigana array is empty, then return. The app renders all at once and not at separate times
-  if (word === undefined) return null
+  //the first screen that the user sees when the application is opened
+  if (cardState == "start") {
+    return (
+      <Box>
+        <Grid
+          className="start"
+          container
+          display={"flex"}
+          justifyContent={"center"}
+          alignContent={"center"}
+        >
+          <img src="oshushi.png" />
+          <Typography className="oshushi-text">言葉を探してみて！</Typography>
+        </Grid>
+      </Box>
+    )
+  }
+
+  //while dictionary is searching for entries that match query, display loading card
+  if (cardState == "loading") {
+    return (
+      <Box>
+        <Grid
+          className="loading"
+          container
+          display={"flex"}
+          justifyContent={"center"}
+          alignContent={"center"}
+        >
+          <img src="loading-spinner.png" />
+        </Grid>
+      </Box>
+    )
+  }
+
+  //if dictionary returns 0 words, then display an error card
+  if (cardState == "error") {
+    return (
+      <Box>
+        <Grid
+          container
+          className="error"
+          display={"flex"}
+          flexDirection={"column"}
+          justifyContent={"center"}
+          alignContent={"center"}
+        >
+          <img src="oshushiNervous.png" />
+          <Typography className="oshushi-text">
+            言葉をみつかれなかった。。。
+          </Typography>
+        </Grid>
+      </Box>
+    )
+  }
+
+  //if the furigana array is empty, then don't load
   if (!furigana) return null
 
-  return (
-    <Box>
-      <Grid
-        container
-        mx={"2px"}
-        columns={10}
-        paddingBottom={"0.75rem"}
-        justifyContent="center"
-        alignContent="center"
-        width={"100%"}
-      ></Grid>
-      {dictData?.map((entries, index) => (
-        <Box
+  if (cardState == "ready") {
+    return (
+      <Box>
+        <Grid
+          container
           mx={"2px"}
-          className="dictCard-container"
+          columns={10}
           paddingBottom={"0.75rem"}
+          justifyContent="center"
+          alignContent="center"
           width={"100%"}
-          key={entries.ent_seq[0]}
-        >
-          <Grid container flexDirection="column" alignItems="stretch">
-            <Paper elevation={4}>
-              <Card>
-                <Grid item>
-                  <Typography
-                    className="dictCard-word"
-                    dangerouslySetInnerHTML={{ __html: furigana[index] }}
-                  ></Typography>
-                  {entries.sense.map((def, i) => (
-                    <Box paddingBottom={"0.5rem"} key={i}>
-                      <Grid container>
-                        <Grid item>
-                          <Typography className="dictCard-pos">
-                            {filterPos(def).join("; ")}
-                          </Typography>
+        ></Grid>
+        {dictData?.map((entries, index) => (
+          <Box
+            mx={"2px"}
+            className="dictCard-container"
+            paddingBottom={"0.75rem"}
+            width={"100%"}
+            key={entries.ent_seq[0]}
+          >
+            <Grid container flexDirection="column" alignItems="stretch">
+              <Paper elevation={4}>
+                <Card>
+                  <Grid item>
+                    <Typography
+                      className="dictCard-word"
+                      dangerouslySetInnerHTML={{ __html: furigana[index] }}
+                    ></Typography>
+                    {entries.sense.map((def, i) => (
+                      <Box paddingBottom={"0.5rem"} key={i}>
+                        <Grid container>
+                          <Grid item>
+                            <Typography className="dictCard-pos">
+                              {filterPos(def).join("; ")}
+                            </Typography>
+                          </Grid>
                         </Grid>
-                      </Grid>
-                      <Grid container columns={10}>
-                        <Grid item xs={0.5}>
-                          <Typography className="dictCard-index">
-                            {`${i + 1}. `}
-                          </Typography>
+                        <Grid container columns={10}>
+                          <Grid item xs={0.5}>
+                            <Typography className="dictCard-index">
+                              {`${i + 1}. `}
+                            </Typography>
+                          </Grid>
+                          <Grid item xs={9.5}>
+                            <Typography className="dictCard-gloss">
+                              {def.gloss.join("; ")}
+                            </Typography>
+                          </Grid>
                         </Grid>
-                        <Grid item xs={9.5}>
-                          <Typography className="dictCard-gloss">
-                            {def.gloss.join("; ")}
-                          </Typography>
-                        </Grid>
-                      </Grid>
-                    </Box>
-                  ))}
-                </Grid>
-              </Card>
-            </Paper>
-          </Grid>
-        </Box>
-      ))}
-    </Box>
-  )
+                      </Box>
+                    ))}
+                  </Grid>
+                </Card>
+              </Paper>
+            </Grid>
+          </Box>
+        ))}
+      </Box>
+    )
+  }
 }
 
 export default DictCard

@@ -30,12 +30,10 @@ const App: React.FC<{}> = ({}) => {
       .builder({ dicPath: "./dict/" })
       .build(function (err: any, tokenizer: any) {
         var path: kuromojiObject[] = tokenizer.tokenize(sentence)
-
+        setKuromojiArr(path)
         if (Kuroshiro.Util.hasJapanese(search)) {
-          setKuromojiArr(path)
           setDictWord(path[0]?.basic_form)
         } else {
-          setKuromojiArr(path)
           setDictWord(path[0]?.surface_form)
         }
       })
@@ -57,30 +55,26 @@ const App: React.FC<{}> = ({}) => {
 
   //search function
   const handleSubmit = (query: string) => {
-    const inputField = document.querySelector("input")
-    setSearch(query)
-    inputField.value = ""
+    if (query !== "") {
+      const inputField = document.querySelector("input")
+      setSearch(query)
+
+      //Set input field back to empty
+      inputField.value = ""
+    }
   }
 
-  if (!kuromojiArr) return null
-
-  // interface keyPress {
-  //   target: KeyboardEvent
-  //   key: string
-  // }
-  interface popupWord {
-    className: string
-    base_form: string
-  }
+  // if (!kuromojiArr) return null
 
   return (
     <Box>
-      <Grid container marginBottom={"5px"} justifyContent={"stretch"}>
-        <Grid>
+      <Grid container marginBottom={"10px"} display={"inline-block"}>
+        <Grid item>
           <Paper variant="outlined">
-            <Box px="15px" py="5px">
+            <Box py={"2px"} px={"10px"}>
               <InputBase
                 id="input"
+                fullWidth={true}
                 placeholder="Search Japanese, English, or Romaji"
                 onKeyPress={(e: any) => {
                   if (e.key === "Enter" && e.target.value !== "")
@@ -91,17 +85,17 @@ const App: React.FC<{}> = ({}) => {
           </Paper>
         </Grid>
       </Grid>
-      <Paper variant="outlined">
+
+      <Paper elevation={2}>
         <Grid
           container
           direction={"row"}
           justifyContent={"center"}
           alignItems={"center"}
           gap={0.7}
-          marginTop={"10px"}
         >
           {kuromojiArr?.map((entries, i) => (
-            <Grid item key={i}>
+            <Grid item key={i} width={"fit-content"}>
               <Typography
                 className="popup-title"
                 onClick={(e: any) => {
@@ -122,6 +116,7 @@ const App: React.FC<{}> = ({}) => {
           ))}
         </Grid>
       </Paper>
+
       <DictCard word={dictWord}></DictCard>
     </Box>
   )

@@ -40,6 +40,9 @@ body {
   pointer-events: none;
   transition: 0.2s ease-out;
 }
+.popup-title .pos:empty {
+  padding: 0rem;
+}
 
 .popup-title:hover .pos {
   opacity: 1;

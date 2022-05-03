@@ -1,7 +1,5 @@
 import Kuroshiro from "kuroshiro"
 import KuromojiAnalyzer from "kuroshiro-analyzer-kuromoji"
-import * as kuromoji from "kuromoji"
-import { arrayBuffer } from "stream/consumers"
 
 //keb is the kanji element
 //ke_inf coded information field

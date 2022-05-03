@@ -1,3 +1,5 @@
+import * as wanakana from "wanakana"
+
 //keb is the kanji element
 //ke_inf coded information field
 //ke_pri indicates how often it appears in different sources
@@ -62,16 +64,17 @@ const data = require("./JMdict.json")
 export async function fetchJMdictData(word: string): Promise<dictEntries[]> {
   const filterData: dictEntries[] = await data.JMdict.entry.filter(
     (entries: dictEntries) => {
-      //return entry if searched word matches romaji
       if (
+        wanakana.isJapanese(word.trim()) &&
         entries?.r_ele !== undefined &&
         entries?.r_ele[0]?.reb?.includes(word.trim())
       ) {
+        //return entry if searched word matches hiragana
         return entries
       }
-
       //return entry if searched word matches kanji
       if (
+        wanakana.isJapanese(word.trim()) &&
         entries?.k_ele !== undefined &&
         entries?.k_ele[0]?.keb?.includes(word.trim())
       ) {
@@ -100,6 +103,14 @@ export async function fetchJMdictData(word: string): Promise<dictEntries[]> {
             def.toString().split(" ").includes(word.trim().toLowerCase())
           )
         )
+      ) {
+        return entries
+      }
+
+      //if word is english, change to hiragana and search for entries matching word
+      if (
+        entries?.r_ele !== undefined &&
+        entries?.r_ele[0]?.reb?.includes(wanakana.toHiragana(word.trim()))
       ) {
         return entries
       }

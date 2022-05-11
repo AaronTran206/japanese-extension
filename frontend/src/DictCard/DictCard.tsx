@@ -6,7 +6,7 @@ import {
   fetchJMdictData,
   furiganaGenerator,
 } from "../utils/api"
-import "./DictCard.css"
+import "./dictCard.css"
 
 type dictCardState = "loading" | "error" | "ready" | "start"
 //create Card to use in popup window

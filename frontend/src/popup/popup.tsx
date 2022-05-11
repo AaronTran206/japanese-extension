@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react"
 import ReactDOM from "react-dom"
 import "./popup.css"
-import DictCard from "../DictCard/DictCard"
+import DictCard from "../dictcard/DictCard"
 import { Box, Grid, InputBase, Paper, Typography } from "@mui/material"
 import { kuromojiObject } from "../utils/api"
 import * as kuromoji from "kuromoji"
